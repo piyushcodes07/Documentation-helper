@@ -18,19 +18,18 @@ langchain_docs_path = ""
 def ingest_docs():
     current_dir = os.getcwd()
     print(current_dir)
-    loader = ReadTheDocsLoader(
-        path="langchain-docs/langchain.readthedocs.io/en/latest", encoding='utf-8'
-    )
+    loader = ReadTheDocsLoader(path="rtdocs" )
 
     raw_documents = loader.load()
     print(len(raw_documents))
     print(f"loaded {len(raw_documents)} documents")
+    print(raw_documents)
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=50)
     documents = text_splitter.split_documents(raw_documents)
     for doc in documents:
         new_url = doc.metadata["source"]
-        new_url = new_url.replace("langchain-docs", "https:/")
+        new_url = new_url.replace("langchain-docs", "https://")
         doc.metadata.update({"source": new_url})
 
     print(f"Going to add {len(documents)} to Pinecone")
